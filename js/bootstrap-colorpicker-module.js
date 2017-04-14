@@ -405,11 +405,11 @@ angular.module('colorpicker.module', [])
             colorpickerTemplate.remove();
           });
 
-          function previewColor() {
+          function previewColor(param) {
             try {
-              colorpickerPreview.css('backgroundColor', pickerColor[thisFormat]());
+              colorpickerPreview.css('backgroundColor', (param == "NoColor") ? rgba(255,255,255,1) : pickerColor[thisFormat]());
             } catch (e) {
-              colorpickerPreview.css('backgroundColor', pickerColor.toHex());
+              colorpickerPreview.css('backgroundColor', (param == "NoColor") ? "rgba(255,255,255,1)" : pickerColor.toHex());
             }
             sliderSaturation.css('backgroundColor', pickerColor.toHex(pickerColor.value.h, 1, 1, 1));
             if (thisFormat === 'rgba') {
@@ -456,13 +456,13 @@ angular.module('colorpicker.module', [])
               pickerColorInput.val(elem.val());
             }
             pickerColorPointers.eq(0).css({
-              left: pickerColor.value.s * componentSize + 'px',
-              top: componentSize - pickerColor.value.b * componentSize + 'px'
+              left: (elem.val() == "") ? "0px" : pickerColor.value.s * componentSize + 'px', // Changed by Anish to set the pointer to left when no colour is selected
+              top: (elem.val() == "") ? "0px" : componentSize - pickerColor.value.b * componentSize + 'px' // Changed by Anish to set the pointer to top when no colour is selected
             });
             pickerColorPointers.eq(1).css('top', componentSize * (1 - pickerColor.value.h) + 'px');
             pickerColorPointers.eq(2).css('top', componentSize * (1 - pickerColor.value.a) + 'px');
             colorpickerValue = pickerColor.value;
-            previewColor();
+            previewColor((elem.val() == "") ? "NoColor" : "");
           }
 
           function getColorpickerTemplatePosition() {
